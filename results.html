@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Election Results</title>
+    <style>
+        body {
+            background-color: #C8DCE5;
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Election Results</h1>
+
+    <script>
+        const candidate1Name = localStorage.getItem('candidate1Name');
+        const candidate2Name = localStorage.getItem('candidate2Name');
+        const candidate3Name = localStorage.getItem('candidate3Name');
+
+        const candidate1Votes = localStorage.getItem('candidate1Votes');
+        const candidate2Votes = localStorage.getItem('candidate2Votes');
+        const candidate3Votes = localStorage.getItem('candidate3Votes');
+
+        const maxVotes = Math.max(candidate1Votes, candidate2Votes, candidate3Votes);
+
+        const resultsElement = document.body;
+        resultsElement.innerHTML = `
+            <h2>${candidate1Name}: ${candidate1Votes} votes ${candidate1Votes == maxVotes ? '(Winner)' : ''}</h2>
+            <h2>${candidate2Name}: ${candidate2Votes} votes ${candidate2Votes == maxVotes ? '(Winner)' : ''}</h2>
+            <h2>${candidate3Name}: ${candidate3Votes} votes ${candidate3Votes == maxVotes ? '(Winner)' : ''}</h2>
+        `;
+    </script>
+
+</body>
+</html>

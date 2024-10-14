@@ -1,0 +1,128 @@
+<style>
+  /* Add some basic styling to the form */
+  body{
+    background-color: #C8DCE5;
+  }
+  form {
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: white;
+  }
+  
+  label {
+    display: block;
+    margin-bottom: 10px;
+  }
+
+  input[type="text"], input[type="file"] {
+    width: 100%;
+    font-family: sans-serif;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+  }
+
+  button[type="submit"] {
+    background-color: #4CAF50;
+    font-family: sans-serif;
+    color: #fff;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #3e8e41;
+  }
+</style>
+
+<form id="candidate-registration-form">
+  <h2>Register Candidates</h2>
+  <label for="candidate-1-name">Candidate 1 Name:</label>
+  <input type="text" id="candidate-1-name" name="candidate-1-name"><br><br>
+  <label for="candidate-1-logo">Candidate 1 Logo:</label>
+  <input type="file" id="candidate-1-logo" name="candidate-1-logo"><br><br>
+  
+  <label for="candidate-2-name">Candidate 2 Name:</label>
+  <input type="text" id="candidate-2-name" name="candidate-2-name"><br><br>
+  <label for="candidate-2-logo">Candidate 2 Logo:</label>
+  <input type="file" id="candidate-2-logo" name="candidate-2-logo"><br><br>
+  
+  <label for="candidate-3-name">Candidate 3 Name:</label>
+  <input type="text" id="candidate-3-name" name="candidate-3-name"><br><br>
+  <label for="candidate-3-logo">Candidate 3 Logo:</label>
+  <input type="file" id="candidate-3-logo" name="candidate-3-logo"><br><br>
+  
+  <button type="submit">Register Candidates</button>
+</form>
+
+<script>
+  // Handle form submission
+  document.getElementById('candidate-registration-form').addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    // Get the form data
+    const formData = {
+      candidate1Name: document.getElementById('candidate-1-name').value,
+      candidate1Logo: document.getElementById('candidate-1-logo').files[0],
+      candidate2Name: document.getElementById('candidate-2-name').value,
+      candidate2Logo: document.getElementById('candidate-2-logo').files[0],
+      candidate3Name: document.getElementById('candidate-3-name').value,
+      candidate3Logo: document.getElementById('candidate-3-logo').files[0],
+    };
+
+    // Check if all files are selected
+    if (formData.candidate1Logo && formData.candidate2Logo && formData.candidate3Logo) {
+      // Read the image files using the FileReader API
+      const fileReader1 = new FileReader();
+      const fileReader2 = new FileReader();
+      const fileReader3 = new FileReader();
+
+      fileReader1.onload = (e) => {
+        formData.candidate1Logo = e.target.result;
+
+        fileReader2.onload = (e) => {
+          formData.candidate2Logo = e.target.result;
+
+          fileReader3.onload = (e) => {
+            formData.candidate3Logo = e.target.result;
+
+            // Store the form data in LocalStorage
+            try {
+              localStorage.setItem('candidate1Name', formData.candidate1Name);
+              localStorage.setItem('candidate1Logo', formData.candidate1Logo);
+              localStorage.setItem('candidate2Name', formData.candidate2Name);
+              localStorage.setItem('candidate2Logo', formData.candidate2Logo);
+              localStorage.setItem('candidate3Name', formData.candidate3Name);
+              localStorage.setItem('candidate3Logo', formData.candidate3Logo);
+              alert('Candidates registered successfully!');
+              window.location.href = 'evm.html'
+            } catch (error) {
+              alert('Error storing data in LocalStorage: ' + error.message);
+            }
+          };
+
+          fileReader3.readAsDataURL(formData.candidate3Logo);
+        };
+
+        fileReader2.readAsDataURL(formData.candidate2Logo);
+      };
+
+      fileReader1.readAsDataURL(formData.candidate1Logo);
+    } else {
+      alert('Please select all files before submitting the form!');
+    }
+  });
+
+  // Prevent form submission on Enter key press
+  document.getElementById('candidate-registration-form').addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+    }
+  });
+</script>

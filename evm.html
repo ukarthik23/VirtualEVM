@@ -1,0 +1,126 @@
+=<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voting Page</title>
+    <style>
+        body {
+            background-color: #C8DCE5;
+            font-family: sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .candidate {
+            margin: 10px 0;
+        }
+        #confirmation-screen, #confirmation-message {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Candidate Selection</h1>
+    <div id="candidates"></div>
+
+    <button id="vote-button">Vote</button>
+
+    <!-- Confirmation screen -->
+    <div id="confirmation-screen">
+        <h2>Confirm Your Selection</h2>
+        <p id="selected-candidate"></p>
+        <button id="confirm-button">Confirm</button>
+        <button id="cancel-button">Cancel</button>
+    </div>
+
+    <!-- Confirmation message -->
+    <div id="confirmation-message">
+        <h2>Confirmation</h2>
+        <p id="confirmation-text"></p>
+    </div>
+
+    <button id="end-election-button" style="display: none;">End Election</button>
+
+    <script>
+        // Retrieve the candidate data from local storage
+        const candidate1Logo = localStorage.getItem('candidate1Logo');
+        const candidate1Name = localStorage.getItem('candidate1Name');
+        const candidate2Logo = localStorage.getItem('candidate2Logo');
+        const candidate2Name = localStorage.getItem('candidate2Name');
+        const candidate3Logo = localStorage.getItem('candidate3Logo');
+        const candidate3Name = localStorage.getItem('candidate3Name');
+
+        // Initialize vote counts
+        let candidate1Votes = 0;
+        let candidate2Votes = 0;
+        let candidate3Votes = 0;
+
+        // Populate the HTML elements with the candidate data
+        const candidatesElement = document.getElementById('candidates');
+        const candidates = [
+            { name: candidate1Name, logo: candidate1Logo },
+            { name: candidate2Name, logo: candidate2Logo },
+            { name: candidate3Name, logo: candidate3Logo },
+        ];
+
+        candidates.forEach((candidate, index) => {
+            const candidateElement = document.createElement('div');
+            candidateElement.classList.add('candidate');
+            candidateElement.innerHTML = `
+                <input type="radio" id="candidate-${index + 1}" name="candidate" value="${candidate.name}">
+                <label for="candidate-${index + 1}">${candidate.name}</label>
+                <img src="${candidate.logo}" alt="${candidate.name} Logo" style="width: 100px; height: auto;">
+            `;
+            candidatesElement.appendChild(candidateElement);
+        });
+
+        // Add event listener to the "Vote" button
+        document.getElementById('vote-button').addEventListener('click', () => {
+            const selectedCandidate = document.querySelector('input[name="candidate"]:checked');
+            if (selectedCandidate) {
+                document.getElementById('selected-candidate').textContent = selectedCandidate.value;
+                document.getElementById('confirmation-screen').style.display = 'block';
+            } else {
+                alert('Please select a candidate');
+            }
+        });
+
+        // Add event listener to the "Confirm" button
+        document.getElementById('confirm-button').addEventListener('click', () => {
+            const selectedCandidate = document.querySelector('input[name="candidate"]:checked');
+            if (selectedCandidate.value === candidate1Name) {
+                candidate1Votes++;
+            } else if (selectedCandidate.value === candidate2Name) {
+                candidate2Votes++;
+            } else if (selectedCandidate.value === candidate3Name) {
+                candidate3Votes++;
+            }
+
+            localStorage.setItem('candidate1Votes', candidate1Votes);
+            localStorage.setItem('candidate2Votes', candidate2Votes);
+            localStorage.setItem('candidate3Votes', candidate3Votes);
+
+            document.getElementById('confirmation-screen').style.display = 'none';
+            document.getElementById('confirmation-message').style.display = 'block';
+            document.getElementById('confirmation-text').textContent = 'Your vote has been registered successfully!';
+
+            setTimeout(() => {
+                document.getElementById('confirmation-message').style.display = 'none';
+                document.getElementById('end-election-button').style.display = 'block';
+            }, 5000);
+        });
+
+        // Add event listener to the "Cancel" button
+        document.getElementById('cancel-button').addEventListener('click', () => {
+            document.getElementById('confirmation-screen').style.display = 'none';
+        });
+
+        // Add event listener to the "End Election" button
+        document.getElementById('end-election-button').addEventListener('click', () => {
+            window.location.href = 'results.html';
+        });
+    </script>
+
+</body>
+</html>
